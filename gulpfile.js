@@ -2,15 +2,16 @@ var gulp = require('gulp');
 var concat = require('gulp-concat');
 var browserSync = require('browser-sync').create();
 
-var jsFiles = ['src/**/*.js', 'specs/**/*.js'];
+var jsFiles = 'src/**/*.js';
+var specFiles = 'specs/**/*.js';
 
 gulp.task('browserSync', function() {
   browserSync.init({
     server: {
-      baseDir: '.',
+      baseDir: '.'
     },
     notify: false
-  })
+  });
 });
 
 gulp.task('scripts', function() {
@@ -22,7 +23,17 @@ gulp.task('scripts', function() {
     }));
 });
 
-gulp.task('default', ['browserSync', 'scripts'], function () {
+gulp.task('specs', function() {
+    return gulp.src(specFiles)
+        .pipe(concat('specs.js'))
+        .pipe(gulp.dest('public'))
+        .pipe(browserSync.reload({
+            stream: true
+        }));
+});
+
+gulp.task('default', ['browserSync', 'scripts', 'specs'], function () {
    gulp.watch(jsFiles, ['scripts']);
+   gulp.watch(specFiles, ['specs']);
 });
 
